@@ -1,0 +1,443 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Baby Shower Wishes 💕</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: "Fredoka", sans-serif;
+        background: linear-gradient(135deg, #ffd6e8, #d6f0ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        background: white;
+        width: 95%;
+        max-width: 420px;
+        border-radius: 25px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      h2 {
+        text-align: center;
+        color: #ff69b4;
+        margin-bottom: 10px;
+      }
+
+      p {
+        text-align: center;
+        color: #555;
+        margin-bottom: 20px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        margin-top: 10px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+
+      textarea {
+        resize: none;
+        height: 140px; /* SAME SIZE FOR BOTH TEXT AREAS */
+      }
+
+      button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 15px;
+        border-radius: 15px;
+        border: none;
+        background: #ff69b4;
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        background: #ff1493;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .gender-btn {
+        width: 48%;
+        display: inline-block;
+      }
+
+      .progress {
+        height: 6px;
+        background: #eee;
+        border-radius: 10px;
+        margin-bottom: 15px;
+      }
+
+      .progress-bar {
+        height: 6px;
+        background: #ff69b4;
+        width: 0%;
+        border-radius: 10px;
+        transition: 0.4s;
+      }
+
+      /* NAME CHIP STYLING */
+      .name-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+        margin-bottom: 15px;
+      }
+
+      .name-chip {
+        background: #ffe6f2;
+        border: 2px solid #ffb6d9;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .name-chip span {
+        cursor: pointer;
+        font-weight: bold;
+        color: #ff1493;
+      }
+
+      .big-emoji {
+        font-size: 50px;
+        text-align: center;
+      }
+
+      .thankyou {
+        text-align: center;
+        font-size: 17px;
+        color: #555;
+        line-height: 1.7;
+        margin-top: 10px;
+      }
+
+      .thankyou strong {
+        color: #ff69b4;
+      }
+
+      .thankyou-card {
+        background: linear-gradient(135deg, #fff0f7, #f9f0ff);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 8px 20px rgba(255, 105, 180, 0.15);
+        margin-top: 15px;
+      }
+
+      .floating-icon {
+        position: fixed;
+        font-size: 30px;
+        opacity: 0.8;
+        pointer-events: none; /* don’t block clicks */
+        animation: fall linear infinite;
+        z-index: 0;
+      }
+
+      @keyframes fall {
+        0% {
+          transform: translateY(-10vh) scale(0.8) rotate(0deg);
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) scale(1) rotate(360deg);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <!-- INTRO SCREEN -->
+      <div id="intro">
+        <div class="big-emoji">👶✨</div>
+        <h2>Welcome to Chandni & Apurv’s Baby Shower Wishes Game!</h2>
+        <p>
+          We’re so excited to celebrate this beautiful journey into parenthood
+          💕<br /><br />
+          We can’t wait to welcome our little bundle of joy and your wishes mean
+          the world to us! ✨
+        </p>
+        <p><strong>Before we start, tell us your name 💖</strong></p>
+        <input type="text" id="guestName" placeholder="Your name here" />
+        <button onclick="startGame()">Start the Fun 🎉</button>
+      </div>
+
+      <!-- SCREEN 1 -->
+      <div id="screen1" class="hidden">
+        <h2>👶 What should baby call you?</h2>
+        <p>Grandma? Auntie? Uncle? Bestie? 💕</p>
+        <input type="text" id="callName" />
+        <button onclick="nextScreen(2)">Next ➜</button>
+      </div>
+
+      <!-- SCREEN 2 -->
+      <div id="screen2" class="hidden">
+        <h2>🍼 Guess the Baby's Gender!</h2>
+        <p>Trust your intuition ✨</p>
+        <button class="gender-btn" onclick="selectGender('Male')">
+          💙 Male
+        </button>
+        <button class="gender-btn" onclick="selectGender('Female')">
+          💖 Female
+        </button>
+      </div>
+
+      <!-- SCREEN 3 -->
+      <div id="screen3" class="hidden">
+        <h2>📛 Name Suggestions Time!</h2>
+        <p>Add as many as you like 😍</p>
+
+        <label>Boy Names 💙</label>
+        <input type="text" id="boyNameInput" />
+        <button onclick="addBoyName()">Add Boy Name</button>
+        <div class="name-container" id="boyNamesList"></div>
+
+        <label>Girl Names 💖</label>
+        <input type="text" id="girlNameInput" />
+        <button onclick="addGirlName()">Add Girl Name</button>
+        <div class="name-container" id="girlNamesList"></div>
+
+        <button onclick="nextScreen(4)">Next ➜</button>
+      </div>
+
+      <!-- SCREEN 4 -->
+      <div id="screen4" class="hidden">
+        <h2>💡 Advice for the Parents</h2>
+        <p>Share wisdom or funny survival tips 😄</p>
+        <textarea id="advice"></textarea>
+        <button onclick="nextScreen(5)">Next ➜</button>
+      </div>
+
+      <!-- SCREEN 5 -->
+      <div id="screen5" class="hidden">
+        <h2>💌 Message for Baby</h2>
+        <p>Write something sweet for the little one ✨</p>
+        <textarea id="message"></textarea>
+        <button onclick="submitForm()">Submit 🎉</button>
+      </div>
+
+      <!-- THANK YOU -->
+      <div id="thankyou" class="hidden">
+        <div class="big-emoji">🎉👶💖</div>
+        <h2>Thank You for Sharing the Love!</h2>
+
+        <div class="thankyou-card">
+          <p class="thankyou">
+            Your wishes, name ideas and heartfelt messages have been lovingly
+            received ✨<br /><br />
+
+            We are incredibly grateful to have you celebrating this beautiful
+            journey with us 💕<br /><br />
+
+            Your support and blessings will surround our little one with warmth
+            and love from the very beginning 👶💌<br /><br />
+
+            Thank you for being part of our special moment!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Array of cute baby shower emojis
+      const icons = ["👶", "🍼", "🧸", "💖", "👣"];
+      const interval = 400; // milliseconds between new icons
+      let floatingInterval = null;
+
+      // Function to create a single floating icon
+      function createFloatingIcon() {
+        const icon = document.createElement("div");
+        icon.className = "floating-icon";
+
+        // Random emoji
+        icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+
+        // Random horizontal start
+        icon.style.left = Math.random() * 90 + "vw";
+
+        // Random size
+        const size = 20 + Math.random() * 25; // 20px to 45px
+        icon.style.fontSize = size + "px";
+
+        // Random animation duration (5–12 seconds)
+        icon.style.animationDuration = 5 + Math.random() * 7 + "s";
+
+        document.body.appendChild(icon);
+
+        // Remove after animation completes
+        setTimeout(
+          () => icon.remove(),
+          parseFloat(icon.style.animationDuration) * 1000,
+        );
+      }
+
+      // Start floating icons
+      function startFloatingIcons() {
+        if (floatingInterval) clearInterval(floatingInterval);
+        floatingInterval = setInterval(createFloatingIcon, interval);
+      }
+
+      // Stop floating icons
+      function stopFloatingIcons() {
+        if (floatingInterval) clearInterval(floatingInterval);
+        floatingInterval = null;
+      }
+
+      emailjs.init("-ar5HFKE06QCy46lc");
+
+      let gender = "";
+      let boyNames = [];
+      let girlNames = [];
+
+      function updateProgress(step) {
+        document.getElementById("progressBar").style.width = step * 16.6 + "%";
+      }
+
+      function startGame() {
+        const name = document.getElementById("guestName").value.trim();
+        if (!name) {
+          alert("Please enter your name 💕");
+          return;
+        }
+        document.getElementById("intro").classList.add("hidden");
+        document.getElementById("screen1").classList.remove("hidden");
+        updateProgress(1);
+      }
+
+      function nextScreen(num) {
+        if (num === 2 && !document.getElementById("callName").value) {
+          alert("Tell baby what to call you! 💕");
+          return;
+        }
+
+        document.querySelectorAll(".container > div").forEach((el) => {
+          if (!el.classList.contains("progress")) el.classList.add("hidden");
+        });
+
+        document.getElementById("screen" + num).classList.remove("hidden");
+        updateProgress(num);
+      }
+
+      function selectGender(choice) {
+        gender = choice;
+        nextScreen(3);
+      }
+
+      function renderNames(list, elementId, type) {
+        const container = document.getElementById(elementId);
+        container.innerHTML = "";
+        list.forEach((name, index) => {
+          const chip = document.createElement("div");
+          chip.className = "name-chip";
+          chip.innerHTML =
+            name +
+            " <span onclick='deleteName(\"" +
+            type +
+            '",' +
+            index +
+            ")'>×</span>";
+          container.appendChild(chip);
+        });
+      }
+
+      function deleteName(type, index) {
+        if (type === "boy") {
+          boyNames.splice(index, 1);
+          renderNames(boyNames, "boyNamesList", "boy");
+        } else {
+          girlNames.splice(index, 1);
+          renderNames(girlNames, "girlNamesList", "girl");
+        }
+      }
+
+      function addBoyName() {
+        let name = document.getElementById("boyNameInput").value.trim();
+        if (name) {
+          boyNames.push(name);
+          document.getElementById("boyNameInput").value = "";
+          renderNames(boyNames, "boyNamesList", "boy");
+        }
+      }
+
+      function addGirlName() {
+        let name = document.getElementById("girlNameInput").value.trim();
+        if (name) {
+          girlNames.push(name);
+          document.getElementById("girlNameInput").value = "";
+          renderNames(girlNames, "girlNamesList", "girl");
+        }
+      }
+
+      function submitForm() {
+        // 1️⃣ Collect all responses into one object
+        const responses = {
+          guest_name: document.getElementById("guestName").value,
+          call_name: document.getElementById("callName").value,
+          gender_guess: gender,
+          boy_names: boyNames.join(", "),
+          girl_names: girlNames.join(", "),
+          advice: document.getElementById("advice").value,
+          message: document.getElementById("message").value,
+        };
+
+        console.log("🎉 Baby Shower Submission:", responses);
+
+        // 2️⃣ Show Thank You screen with floating icons
+        startFloatingIcons();
+        document.querySelectorAll(".container > div").forEach((el) => {
+          if (!el.classList.contains("progress")) el.classList.add("hidden");
+        });
+        document.getElementById("thankyou").classList.remove("hidden");
+        updateProgress(6);
+
+        // 3️⃣ Optional: Send via EmailJS (uncomment and replace IDs when ready)
+        emailjs.send("service_t996g7e", "template_8gq1nni", responses).then(
+          function (response) {
+            console.log("SUCCESS!", response.status, response.text);
+          },
+          function (error) {
+            console.error("FAILED...", error);
+          },
+        );
+      }
+    </script>
+  </body>
+</html>
